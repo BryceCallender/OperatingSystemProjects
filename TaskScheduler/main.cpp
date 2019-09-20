@@ -3,6 +3,7 @@
 #include <vector>
 #include <sstream>
 #include <iomanip>
+#include <algorithm>
 
 struct Job
 {
@@ -13,22 +14,30 @@ struct Job
 	int endTime = 0;
 };
 
-double firstComeFirstServedAlgorithm(std::ifstream& inputFile);
-void readJobFile(std::ifstream& inputFile, std::vector<Job>& jobs);
+double firstComeFirstServedAlgorithm();
+double shortestJobFirst();
+double roundRobin(int roundRobinSlice);
+
+void readJobFile(std::vector<Job>& jobs);
 void printScheduleTable(const std::vector<Job>& jobs);
 
 int main()
 {
-	std::ifstream inputFile("job.txt");
+	std::cout << "The average turn around time is: " << firstComeFirstServedAlgorithm() << std::endl << std::endl;
 
-	std::cout << "The average turn around time is: " << firstComeFirstServedAlgorithm(inputFile);
+	std::cout << "The average turn around time is: " << shortestJobFirst() << std::endl << std::endl;
 
-	inputFile.close();
+	std::cout << "The average turn around time is: " << roundRobin(2) << std::endl << std::endl;
+
+	std::cout << "The average turn around time is: " << roundRobin(3) << std::endl << std::endl;
+
 	return 0;
 }
 
-void readJobFile(std::ifstream& inputFile, std::vector<Job>& jobs)
+void readJobFile(std::vector<Job>& jobs)
 {
+	std::ifstream inputFile("job.txt");
+	
 	while (!inputFile.eof())
 	{
 		std::string name;
@@ -45,6 +54,8 @@ void readJobFile(std::ifstream& inputFile, std::vector<Job>& jobs)
 
 		jobs.push_back(job);
 	}
+
+	inputFile.close();
 }
 
 void printScheduleTable(const std::vector<Job>& jobs)
@@ -57,11 +68,11 @@ void printScheduleTable(const std::vector<Job>& jobs)
 	}
 } 
 
-double firstComeFirstServedAlgorithm(std::ifstream& inputFile)
+double firstComeFirstServedAlgorithm()
 {
 	std::vector<Job> jobs;
 
-	readJobFile(inputFile, jobs);
+	readJobFile(jobs);
 
 	int timer = 0;
 	double averageTurnAroundTime = 0.0;
@@ -80,4 +91,47 @@ double firstComeFirstServedAlgorithm(std::ifstream& inputFile)
 	printScheduleTable(jobs);
 	
 	return averageTurnAroundTime / jobs.size();
+}
+
+double shortestJobFirst()
+{
+	std::vector<Job> jobs;
+
+	readJobFile(jobs);
+
+	std::sort(jobs.begin(), jobs.end(), [](Job a, Job b)
+	{
+		return a.burstTime < b.burstTime;
+	});
+
+	int timer = 0;
+	double averageTurnAroundTime = 0.0;
+
+	for (int i = 0; i < jobs.size(); i++)
+	{
+		Job& currentJob = jobs[i];
+		currentJob.startTime = timer;
+
+		timer += currentJob.burstTime;
+
+		currentJob.endTime = timer;
+		averageTurnAroundTime += currentJob.endTime;
+	}
+
+	printScheduleTable(jobs);
+
+	return averageTurnAroundTime / jobs.size();
+	
+}
+
+double roundRobin(int roundRobinSlice)
+{
+	std::vector<Job> jobs;
+
+	readJobFile(jobs);
+
+	int timer = 0;
+	double averageTurnAroundTime = 0.0;
+
+	
 }
