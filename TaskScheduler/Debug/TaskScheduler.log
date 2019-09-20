@@ -1,0 +1,3 @@
+﻿  main.cpp
+C:\Users\bryce\source\repos\TaskScheduler\main.cpp(53,15): warning C4018:  '<': signed/unsigned mismatch
+  TaskScheduler.vcxproj -> C:\Users\bryce\source\repos\TaskScheduler\Debug\TaskScheduler.exe
