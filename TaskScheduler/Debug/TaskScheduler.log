@@ -1,3 +1,0 @@
-﻿  main.cpp
-C:\Users\bryce\Desktop\OperatingSystemProjects\TaskScheduler\main.cpp(69,20): warning C4018:  '<': signed/unsigned mismatch
-  TaskScheduler.vcxproj -> C:\Users\bryce\Desktop\OperatingSystemProjects\TaskScheduler\Debug\TaskScheduler.exe
