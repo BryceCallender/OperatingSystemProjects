@@ -2,6 +2,7 @@
 #include <fstream>
 #include <vector>
 #include <sstream>
+#include <iomanip>
 
 struct Job
 {
@@ -13,23 +14,22 @@ struct Job
 };
 
 double firstComeFirstServedAlgorithm(std::ifstream& inputFile);
-
+void readJobFile(std::ifstream& inputFile, std::vector<Job>& jobs);
+void printScheduleTable(const std::vector<Job>& jobs);
 
 int main()
 {
 	std::ifstream inputFile("job.txt");
 
-	std::cout << firstComeFirstServedAlgorithm(inputFile);
+	std::cout << "The average turn around time is: " << firstComeFirstServedAlgorithm(inputFile);
 
 	inputFile.close();
 	return 0;
 }
 
-double firstComeFirstServedAlgorithm(std::ifstream& inputFile)
+void readJobFile(std::ifstream& inputFile, std::vector<Job>& jobs)
 {
-	std::vector<Job> jobs;
-
-	while(!inputFile.eof())
+	while (!inputFile.eof())
 	{
 		std::string name;
 		std::getline(inputFile, name);
@@ -45,32 +45,39 @@ double firstComeFirstServedAlgorithm(std::ifstream& inputFile)
 
 		jobs.push_back(job);
 	}
+}
+
+void printScheduleTable(const std::vector<Job>& jobs)
+{
+	std::cout << std::left << std::setw(12) << "Job Name" << std::setw(14) << "Start Time" << std::setw(12) << "End Time" << std::setw(19) << "Job Completion" << std::endl;
+	for(const Job& job : jobs)
+	{
+		std::cout << std::left << std::setw(12) << job.name << std::setw(14) << job.startTime << std::setw(12) << job.endTime << std::setw(19) << job.name + " completed at @" + std::to_string(job.endTime);
+		std::cout << std::endl;
+	}
+} 
+
+double firstComeFirstServedAlgorithm(std::ifstream& inputFile)
+{
+	std::vector<Job> jobs;
+
+	readJobFile(inputFile, jobs);
 
 	int timer = 0;
-	int index = 0;
-	Job currentJob = jobs[index];
-	currentJob.startTime = timer;
-	while (index < jobs.size())
-	{
-		if(currentJob.burstTime == 0)
-		{
-			currentJob.endTime = timer;
-			index++;
-			if (index == jobs.size())
-				break;
-			currentJob = jobs[index];
-			currentJob.startTime = timer;
-		}
-			
-		timer++;
-		currentJob.burstTime--;
-	}
-
 	double averageTurnAroundTime = 0.0;
-	for (Job job : jobs)
+
+	for (int i = 0; i < jobs.size(); i++)
 	{
-		averageTurnAroundTime += job.endTime;
+		Job& currentJob = jobs[i];
+		currentJob.startTime = timer;
+
+		timer += currentJob.burstTime;
+
+		currentJob.endTime = timer;
+		averageTurnAroundTime += currentJob.endTime;
 	}
 
+	printScheduleTable(jobs);
+	
 	return averageTurnAroundTime / jobs.size();
 }
