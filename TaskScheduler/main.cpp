@@ -36,7 +36,7 @@ int main()
 
 void readJobFile(std::vector<Job>& jobs)
 {
-	std::ifstream inputFile("job.txt");
+	std::ifstream inputFile("/Users/brycecallender/CLionProjects/TaskScheduler/job.txt");
 	
 	while (!inputFile.eof())
 	{
@@ -63,7 +63,11 @@ void printScheduleTable(const std::vector<Job>& jobs)
 	std::cout << std::left << std::setw(12) << "Job Name" << std::setw(14) << "Start Time" << std::setw(12) << "End Time" << std::setw(19) << "Job Completion" << std::endl;
 	for(const Job& job : jobs)
 	{
-		std::cout << std::left << std::setw(12) << job.name << std::setw(14) << job.startTime << std::setw(12) << job.endTime << std::setw(19) << job.name + " completed at @" + std::to_string(job.endTime);
+		std::cout << std::left << std::setw(12) << job.name << std::setw(14) << job.startTime << std::setw(12) << job.endTime;
+		if(job.burstTime == 0)
+        {
+            std::cout << std::setw(19) << job.name + " completed at @" + std::to_string(job.endTime);
+        }
 		std::cout << std::endl;
 	}
 } 
@@ -77,12 +81,12 @@ double firstComeFirstServedAlgorithm()
 	int timer = 0;
 	double averageTurnAroundTime = 0.0;
 
-	for (int i = 0; i < jobs.size(); i++)
+	for (Job& currentJob : jobs)
 	{
-		Job& currentJob = jobs[i];
-		currentJob.startTime = timer;
+        currentJob.startTime = timer;
 
 		timer += currentJob.burstTime;
+		currentJob.burstTime = 0;
 
 		currentJob.endTime = timer;
 		averageTurnAroundTime += currentJob.endTime;
@@ -107,12 +111,12 @@ double shortestJobFirst()
 	int timer = 0;
 	double averageTurnAroundTime = 0.0;
 
-	for (int i = 0; i < jobs.size(); i++)
+	for (Job& currentJob : jobs)
 	{
-		Job& currentJob = jobs[i];
-		currentJob.startTime = timer;
+        currentJob.startTime = timer;
 
 		timer += currentJob.burstTime;
+        currentJob.burstTime = 0;
 
 		currentJob.endTime = timer;
 		averageTurnAroundTime += currentJob.endTime;
@@ -130,8 +134,52 @@ double roundRobin(int roundRobinSlice)
 
 	readJobFile(jobs);
 
-	int timer = 0;
-	double averageTurnAroundTime = 0.0;
+	std::vector<Job> jobList = jobs;
 
+	int timer = 0;
+	int jobSize = jobs.size();
+	double averageTurnAroundTime = 0.0;
+	int index = 0;
+
+    while(!jobs.empty())
+    {
+        Job& currentJob = jobList[index];
+        currentJob.startTime = timer;
+
+        //Does the current job not require all of the round robin time?
+        if(currentJob.burstTime - roundRobinSlice < 0)
+        {
+            timer += currentJob.burstTime;
+            //Get rid of the correct job based on index we are (circularly)
+            currentJob.endTime = timer;
+            currentJob.burstTime = 0;
+            averageTurnAroundTime += currentJob.endTime;
+            jobs.erase(jobs.begin() + (index % jobSize));
+        }
+        //Does it take all the time?
+        else if(currentJob.burstTime - roundRobinSlice == 0)
+        {
+            timer += roundRobinSlice;
+            currentJob.burstTime = 0;
+            currentJob.endTime = timer;
+            averageTurnAroundTime += currentJob.endTime;
+            //jobList.push_back(currentJob);
+            //Get rid of the front of the list of jobs
+            jobs.erase(jobs.begin() + (index % jobSize));
+        }
+        //Does it have time left?
+        else
+        {
+            timer += roundRobinSlice;
+            currentJob.burstTime -= roundRobinSlice;
+            currentJob.endTime = timer;
+            jobList.push_back(currentJob);
+        }
+        index++;
+    }
+
+    printScheduleTable(jobList);
+
+    return averageTurnAroundTime / jobSize;
 	
 }
