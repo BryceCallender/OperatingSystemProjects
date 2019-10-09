@@ -128,6 +128,11 @@
   <ItemGroup>
     <Text Include="job.txt" />
   </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="FirstComeFirstServed.h" />
+    <ClInclude Include="RoundRobin.h" />
+    <ClInclude Include="ShortestJobFirst.h" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

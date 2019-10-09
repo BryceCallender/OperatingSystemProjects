@@ -22,4 +22,15 @@
   <ItemGroup>
     <Text Include="job.txt" />
   </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="FirstComeFirstServed.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="RoundRobin.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ShortestJobFirst.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
 </Project>
