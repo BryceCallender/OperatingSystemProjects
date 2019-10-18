@@ -55,11 +55,6 @@ int main()
 
 		std::cout << std::endl << std::endl;
 	}
-	
-    // printAverageTime(firstComeFirstServed.firstComeFirstServedAlgorithm());
-    // printAverageTime(shortestJobFirst.shortestJobFirst());
-    // printAverageTime(roundRobin.roundRobin(2));
-    // printAverageTime(roundRobin.roundRobin(5));
 
 	return 0;
 }

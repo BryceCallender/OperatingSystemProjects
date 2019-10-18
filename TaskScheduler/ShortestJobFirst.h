@@ -9,7 +9,7 @@ public:
 
     double shortestJobFirst()
     {
-        //std::cout << "Performing Shortest Job First Algorithm!\n";
+        std::cout << "Performing Shortest Job First Algorithm!\n";
 
         std::vector<Job> jobs;
 
@@ -17,7 +17,7 @@ public:
         readJobFile(jobs);
 
         //Sort the jobs by their burst time so the shortest job is at the beginning
-        std::sort(jobs.begin(), jobs.end(), [](const Job a, const Job b)
+        std::sort(jobs.begin(), jobs.end(), [](const Job& a, const Job& b)
         {
             return a.burstTime < b.burstTime;
         });
@@ -41,7 +41,7 @@ public:
         }
 
         //Print the Schedule Table
-        //printScheduleTable(jobs);
+        printScheduleTable(jobs);
 
         //Return the average time
         return averageTurnAroundTime / jobs.size();
@@ -97,5 +97,6 @@ public:
 			}
 			std::cout << std::endl;
 		}
+		std::cout << std::endl;
 	}
 };

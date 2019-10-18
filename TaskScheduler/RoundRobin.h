@@ -7,7 +7,7 @@ public:
 
     double roundRobin(int roundRobinSlice)
     {
-        //std::cout << "Performing Round Robin with time slice " + std::to_string(roundRobinSlice) + " or RR-" + std::to_string(roundRobinSlice) << std::endl;
+        std::cout << "Performing Round Robin with time slice " + std::to_string(roundRobinSlice) + " or RR-" + std::to_string(roundRobinSlice) << std::endl;
 
         std::vector<Job> jobs;
 
@@ -69,7 +69,7 @@ public:
         }
 
         //Print the Schedule Table
-        //printScheduleTable(jobList);
+        printScheduleTable(jobList);
 
         //Return the average time
         return averageTurnAroundTime / jobs.size();
@@ -125,5 +125,6 @@ public:
 			}
 			std::cout << std::endl;
 		}
+		std::cout << std::endl;
 	}
 };

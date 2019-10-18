@@ -7,7 +7,7 @@ public:
 
     double firstComeFirstServedAlgorithm()
     {
-        //std::cout << "Performing First Come First Serve Algorithm!\n";
+        std::cout << "Performing First Come First Serve Algorithm!\n";
 
         std::vector<Job> jobs;
 
@@ -33,7 +33,7 @@ public:
         }
 
         //Print the Schedule Table
-        //printScheduleTable(jobs);
+        printScheduleTable(jobs);
 
         //Return the average time
         return averageTurnAroundTime / jobs.size();
@@ -89,6 +89,7 @@ public:
 			}
 			std::cout << std::endl;
 		}
+		std::cout << std::endl;
 	}
 
 };
