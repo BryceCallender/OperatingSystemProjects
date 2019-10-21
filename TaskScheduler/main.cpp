@@ -74,7 +74,6 @@ int main()
 
 		std::cout << std::endl << std::endl;
 		system("pause");
-
 		std::cout << std::endl << std::endl;
 	}
 
