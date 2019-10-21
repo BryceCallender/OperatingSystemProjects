@@ -32,26 +32,45 @@ int main()
     std::cout << std::endl;
 	
 	double totalFCFSTime = 0;
-	double totoalSJFTime = 0;
+	double totalSJFTime = 0;
 	double totalRoundRobin2Time = 0;
-	double totoalRoundRobin5Time = 0;
+	double totalRoundRobin5Time = 0;
 	
 	for (int jobSize : array)
 	{
-		for(int j = 0; j < NUM_TESTS; j++)
+		for(int j = 1; j <= NUM_TESTS; j++)
 		{
 			generateRandomJobsInFile(jobSize);
 
-			totalFCFSTime += firstComeFirstServed.firstComeFirstServedAlgorithm();
-			totoalSJFTime += shortestJobFirst.shortestJobFirst();
-			totalRoundRobin2Time += roundRobin.roundRobin(2);
-			totoalRoundRobin5Time += roundRobin.roundRobin(5);
+			double average = 0;
+
+			average = firstComeFirstServed.firstComeFirstServedAlgorithm();
+			std::cout << "The average turnaround time is: " << average << std::endl << std::endl;
+			totalFCFSTime += average;
+			
+			average = shortestJobFirst.shortestJobFirst();
+			std::cout << "The average turnaround time is: " << average << std::endl << std::endl;
+			totalSJFTime += average;
+			
+			average = roundRobin.roundRobin(2);
+			std::cout << "The average turnaround time is: " << average << std::endl << std::endl;
+			totalRoundRobin2Time += average;
+			
+			average = roundRobin.roundRobin(5);
+			std::cout << "The average turnaround time is: " << average << std::endl << std::endl;
+			totalRoundRobin5Time += average;
+			
 		}
 
 		std::cout << "The average time for FCFS" << " of size " << jobSize << ": " << totalFCFSTime / NUM_TESTS << std::endl;
-		std::cout << "The average time for SJF" << " of size " << jobSize << ": " << totoalSJFTime / NUM_TESTS << std::endl;
+		std::cout << "The average time for SJF" << " of size " << jobSize << ": " << totalSJFTime / NUM_TESTS << std::endl;
 		std::cout << "The average time for RR-2" << " of size " << jobSize << ": " << totalRoundRobin2Time / NUM_TESTS << std::endl;
-		std::cout << "The average time for RR-5" << " of size " << jobSize << ": " << totoalRoundRobin5Time / NUM_TESTS << std::endl;
+		std::cout << "The average time for RR-5" << " of size " << jobSize << ": " << totalRoundRobin5Time / NUM_TESTS << std::endl;
+
+		totalFCFSTime = 0;
+		totalSJFTime = 0;
+		totalRoundRobin2Time = 0;
+		totalRoundRobin5Time = 0;
 
 		std::cout << std::endl << std::endl;
 	}
