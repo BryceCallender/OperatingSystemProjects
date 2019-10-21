@@ -14,7 +14,7 @@ struct Job
 };
 
 #include "FirstComeFirstServed.h"
-#include "ShortestJobFirst.h"
+#include "ShortestJobFirst.h" 
 #include "RoundRobin.h"
 
 void generateRandomJobsInFile(int jobCount);
@@ -38,7 +38,7 @@ int main()
 	
 	for (int jobSize : array)
 	{
-		for(int j = 1; j <= NUM_TESTS; j++)
+		for(int j = 0; j < NUM_TESTS; j++)
 		{
 			generateRandomJobsInFile(jobSize);
 
@@ -71,6 +71,9 @@ int main()
 		totalSJFTime = 0;
 		totalRoundRobin2Time = 0;
 		totalRoundRobin5Time = 0;
+
+		std::cout << std::endl << std::endl;
+		system("pause");
 
 		std::cout << std::endl << std::endl;
 	}

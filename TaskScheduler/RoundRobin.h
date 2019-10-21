@@ -41,7 +41,7 @@ public:
                 averageTurnAroundTime += currentJob.endTime;
                 tasksRemoved++;
             }
-                //Does it take all the time?
+            //Does it take all the time?
             else if(currentJob.burstTime - roundRobinSlice == 0)
             {
                 //Add the slice time to the timer since it used all the time
@@ -53,7 +53,7 @@ public:
                 averageTurnAroundTime += currentJob.endTime;
                 tasksRemoved++;
             }
-                //Does it have time left?
+            //Does it have time left?
             else
             {
                 //Increment timer since it used all the time
