@@ -20,8 +20,8 @@ struct Job
 void generateRandomJobsInFile(int jobCount);
 void printAverageTime(double time);
 
-const int NUM_TESTS = 15;
-static int array[] = { 5, 10, 15, 20, 25, 30 };
+const int NUM_TESTS = 1;
+static int array[] = { 5 };
 
 int main()
 {
@@ -40,7 +40,7 @@ int main()
 	{
 		for(int j = 0; j < NUM_TESTS; j++)
 		{
-			generateRandomJobsInFile(jobSize);
+			//generateRandomJobsInFile(jobSize);
 
 			double average = 0;
 
