@@ -16,13 +16,13 @@ bool hasOnePageLeft(std::unordered_map<char, int>& buffer);
 
 int main()
 {
-	std::string test = "70120304230321201701";
+	std::string test = "361724720354720146353214567012";
 
-	std::cout << "There were " << firstInFirstOut(3, test) << " page faults!" << std::endl;
+	std::cout << "There were " << firstInFirstOut(5, test) << " page faults!" << std::endl;
 
-	std::cout << "There were " << leastRecentlyUsed(3, test) << " page faults!" << std::endl;
+	std::cout << "There were " << leastRecentlyUsed(5, test) << " page faults!" << std::endl;
 
-	std::cout << "There were " << optimalAlgorithm(3, test) << " page faults!" << std::endl;
+	std::cout << "There were " << optimalAlgorithm(5, test) << " page faults!" << std::endl;
 	
 	return 0;
 }
@@ -140,11 +140,14 @@ int optimalAlgorithm(int pageFrameSize, std::string& referenceString)
 					currentPages.insert(std::make_pair(page, 1));
 				}
 
-				int j = i;
+				int j = i + 1;
 				int currentPageNumber = pageNumber;
 				// Loop until we find the one with the longest period of time until it appears
 				while(j < referenceString.length() && !hasOnePageLeft(currentPages))
 				{
+					pageNumber = referenceString[j] - '0';
+					j++;
+					
 					if (currentPages.find(pageNumber) != currentPages.end())
 					{
 						if (currentPages[pageNumber] > 0)
@@ -153,8 +156,7 @@ int optimalAlgorithm(int pageFrameSize, std::string& referenceString)
 						}
 					}
 					
-					pageNumber = referenceString[j] - '0';
-					j++;
+					
 				}
 
 				int pageToRemove = -1;
