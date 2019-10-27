@@ -3,6 +3,7 @@
 #include <random>
 #include <fstream>
 #include <unordered_map>
+#include <algorithm>
 
 std::string generateRandomPageString();
 
@@ -14,16 +15,55 @@ bool isInPageBuffer(std::vector<int>& buffer, int pageNumber);
 bool isPageVectorFull(std::vector<int>& buffer);
 bool hasOnePageLeft(std::unordered_map<char, int>& buffer);
 
+void printPages(std::vector<int>& buffer);
+
+const int NUM_TESTS = 50;
+
+int PAGE_FRAME_SIZES[] = { 3, 4, 5, 6 };
+
 int main()
 {
-	std::string test = "361724720354720146353214567012";
+    int totalFIFOFaults = 0;
+    int totalLRUFaults = 0;
+    int totalOptimalFaults = 0;
 
-	std::cout << "There were " << firstInFirstOut(5, test) << " page faults!" << std::endl;
+    for(int pageFrameSize : PAGE_FRAME_SIZES)
+    {
+        for(int i = 0; i < NUM_TESTS; i++)
+        {
+            std::string referenceString = generateRandomPageString();
 
-	std::cout << "There were " << leastRecentlyUsed(5, test) << " page faults!" << std::endl;
+            //std::cout << "The reference string used is: " << referenceString << std::endl << std::endl;
 
-	std::cout << "There were " << optimalAlgorithm(5, test) << " page faults!" << std::endl;
-	
+            int result;
+
+            result = firstInFirstOut(pageFrameSize, referenceString);
+            totalFIFOFaults += result;
+
+            //std::cout << "There were " << result << " page faults for FIFO!" << std::endl;
+
+            result = leastRecentlyUsed(pageFrameSize, referenceString);
+            totalLRUFaults += result;
+
+            //std::cout << "There were " << result << " page faults for LRU!" << std::endl;
+
+            result = optimalAlgorithm(pageFrameSize, referenceString);
+            totalOptimalFaults += result;
+
+            //std::cout << "There were " << result << " page faults for Optimal!" << std::endl;
+        }
+
+        std::cout << "The average time for FIFO of page frame size " << pageFrameSize << ": " << totalFIFOFaults / NUM_TESTS << std::endl;
+        std::cout << "The average time for LRU of page frame size " << pageFrameSize << ": " << totalLRUFaults / NUM_TESTS << std::endl;
+        std::cout << "The average time for Optimal of page frame size " << pageFrameSize << ": " << totalOptimalFaults / NUM_TESTS << std::endl;
+
+        totalFIFOFaults = 0;
+        totalLRUFaults = 0;
+        totalOptimalFaults = 0;
+
+        std::cout << std::endl << std::endl;
+    }
+
 	return 0;
 }
 
@@ -79,7 +119,7 @@ int leastRecentlyUsed(int pageFrameSize, std::string& referenceString)
 				leastRecentlyUsed.erase(leastRecentlyUsed.begin());
 
 				// Find the page that is in the LRU and find out where it is in the pages list
-				std::vector<int>::iterator iterator = std::find(pages.begin(), pages.end(), pageToRemove);
+				auto iterator = std::find(pages.begin(), pages.end(), pageToRemove);
 
 				// Change that number to the current page being added
 				pages[std::distance(pages.begin(), iterator)] = pageNumber;
@@ -92,7 +132,7 @@ int leastRecentlyUsed(int pageFrameSize, std::string& referenceString)
 		// The number is in pages so lets modify it to be recent in the vector 
 		else
 		{
-			std::vector<int>::iterator iterator = std::find(leastRecentlyUsed.begin(), leastRecentlyUsed.end(), pageNumber);
+			auto iterator = std::find(leastRecentlyUsed.begin(), leastRecentlyUsed.end(), pageNumber);
 			
 			if(iterator != leastRecentlyUsed.end())
 			{
@@ -148,15 +188,13 @@ int optimalAlgorithm(int pageFrameSize, std::string& referenceString)
 					pageNumber = referenceString[j] - '0';
 					j++;
 					
-					if (currentPages.find(pageNumber) != currentPages.end())
+					if (currentPages.find((char)pageNumber) != currentPages.end())
 					{
 						if (currentPages[pageNumber] > 0)
 						{
 							currentPages[pageNumber]--;
 						}
 					}
-					
-					
 				}
 
 				int pageToRemove = -1;
@@ -171,11 +209,11 @@ int optimalAlgorithm(int pageFrameSize, std::string& referenceString)
 				}
 
 				// Find the page that is in the LRU and find out where it is in the pages list
-				std::vector<int>::iterator iterator = std::find(pages.begin(), pages.end(), pageToRemove);
+				auto iterator = std::find(pages.begin(), pages.end(), pageToRemove);
 
 				// Change that number to the current page being added
 				pages[std::distance(pages.begin(), iterator)] = currentPageNumber;
-							
+
 			}
 
 			numPageFaults++;
@@ -222,6 +260,27 @@ bool hasOnePageLeft(std::unordered_map<char, int>& buffer)
 	}
 
 	return numOnes == 1;
+}
+
+void printPages(std::vector<int>& buffer)
+{
+    std::cout << "\n{ ";
+
+    unsigned long size = buffer.size();
+
+    for(int i = 0; i < size; i++)
+    {
+        if(i < size - 1)
+        {
+            std::cout << buffer[i] << ", ";
+        }
+        else
+        {
+            std::cout << buffer[i];
+        }
+    }
+
+    std::cout << " }";
 }
 
 std::string generateRandomPageString()
