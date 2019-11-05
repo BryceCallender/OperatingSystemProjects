@@ -17,7 +17,7 @@ bool hasOnePageLeft(std::unordered_map<char, int>& buffer);
 
 void printPages(std::vector<int>& buffer);
 
-const int NUM_TESTS = 50;
+const double NUM_TESTS = 50.0;
 
 int PAGE_FRAME_SIZES[] = { 3, 4, 5, 6 };
 
@@ -33,24 +33,14 @@ int main()
         {
             std::string referenceString = generateRandomPageString();
 
-            //std::cout << "The reference string used is: " << referenceString << std::endl << std::endl;
-
-            int result;
-
-            result = firstInFirstOut(pageFrameSize, referenceString);
+			int result = firstInFirstOut(pageFrameSize, referenceString);
             totalFIFOFaults += result;
-
-            //std::cout << "There were " << result << " page faults for FIFO!" << std::endl;
 
             result = leastRecentlyUsed(pageFrameSize, referenceString);
             totalLRUFaults += result;
-
-            //std::cout << "There were " << result << " page faults for LRU!" << std::endl;
-
+        	
             result = optimalAlgorithm(pageFrameSize, referenceString);
             totalOptimalFaults += result;
-
-            //std::cout << "There were " << result << " page faults for Optimal!" << std::endl;
         }
 
         std::cout << "The average time for FIFO of page frame size " << pageFrameSize << ": " << totalFIFOFaults / NUM_TESTS << std::endl;
@@ -71,17 +61,22 @@ int firstInFirstOut(int pageFrameSize, std::string& referenceString)
 {
 	int numPageFaults = 0;
 
+	//Index to place the pageNumber at
 	int firstInIndex = 0;
 
+	//Make a vector to hold the complete pageFrame and init the values to -1
 	std::vector<int> pages(pageFrameSize, -1);
 
 	for (char i : referenceString)
 	{
+		//Get numerical value of the char
 		int pageNumber = i - '0';
 		if(!isInPageBuffer(pages, pageNumber))
 		{
+			//Place the page at the spot to replace
 			pages[firstInIndex] = pageNumber;
 			numPageFaults++;
+			//Makes sure we wrap around so 0..pagesize then back to 0
 			firstInIndex = (firstInIndex + 1) % pageFrameSize;
 		}
 	}
@@ -138,9 +133,9 @@ int leastRecentlyUsed(int pageFrameSize, std::string& referenceString)
 			{
 				// Erase the one in the list already
 				leastRecentlyUsed.erase(iterator);
-				// Add it to the back to simulate it being recently used
 			}
-			
+
+			// Add it to the back to simulate it being recently used
 			leastRecentlyUsed.push_back(pageNumber);
 		}
 	}
@@ -169,7 +164,7 @@ int optimalAlgorithm(int pageFrameSize, std::string& referenceString)
 				pages[placeIndex] = pageNumber;
 				placeIndex++;
 			}
-			// Current page is not the buffer but the page vector is full
+			// Current page is not in the buffer but the page vector is full
 			else
 			{
 				std::unordered_map<char, int> currentPages;
