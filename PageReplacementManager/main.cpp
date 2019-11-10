@@ -27,12 +27,17 @@ int main()
     int totalLRUFaults = 0;
     int totalOptimalFaults = 0;
 
+	//The file containing the reference strings used for the algorithms
+	std::ofstream refStringFile("ReferenceStrings.txt");
+
     for(int pageFrameSize : PAGE_FRAME_SIZES)
     {
+		refStringFile << "Page Frame Size: " << pageFrameSize << std::endl;
         for(int i = 0; i < NUM_TESTS; i++)
         {
             std::string referenceString = generateRandomPageString();
-
+			refStringFile << referenceString << std::endl;
+        	
 			int result = firstInFirstOut(pageFrameSize, referenceString);
             totalFIFOFaults += result;
 
@@ -52,6 +57,7 @@ int main()
         totalOptimalFaults = 0;
 
         std::cout << std::endl << std::endl;
+		refStringFile << std::endl << std::endl;
     }
 
 	return 0;
@@ -183,7 +189,7 @@ int optimalAlgorithm(int pageFrameSize, std::string& referenceString)
 					pageNumber = referenceString[j] - '0';
 					j++;
 					
-					if (currentPages.find((char)pageNumber) != currentPages.end())
+					if (currentPages.find(static_cast<char>(pageNumber)) != currentPages.end())
 					{
 						if (currentPages[pageNumber] > 0)
 						{
@@ -282,7 +288,7 @@ std::string generateRandomPageString()
 {
 	std::random_device randomDevice;  //Will be used to obtain a seed for the random number engine
 	std::mt19937 generator(randomDevice()); //Standard mersenne_twister_engine seeded with randomDevice()
-	std::uniform_int_distribution<> dis(0, 9);
+	std::uniform_int_distribution<> dis(0, 7);
 
 	std::string referenceString;
 
